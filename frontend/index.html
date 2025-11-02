@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airplane Inspection App</title>
+    <style>
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* ========================================
+           MAIN CONTAINER
+           ======================================== */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        /* ========================================
+           STEP INDICATOR
+           ======================================== */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #4caf50;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .step.active .step-label {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* ========================================
+           STEP CONTENT SECTIONS
+           ======================================== */
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* ========================================
+           STEP 1: AREA SELECTION
+           ======================================== */
+        .dropdown-container {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        select {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* ========================================
+           STEP 2: IMAGE INPUT
+           ======================================== */
+        .image-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-height: 60px; /* Minimum 48px + padding for mobile */
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Hide the file input, we'll trigger it with a button */
+        #fileInput {
+            display: none;
+        }
+
+        /* Image preview area */
+        .image-preview-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .image-preview.show {
+            display: inline-block;
+        }
+
+        /* ========================================
+           STEP 3: DEFECT DETECTION
+           ======================================== */
+        .analyze-button {
+            width: 100%;
+            margin-bottom: 20px;
+            background: #ff6b6b;
+        }
+
+        .analyze-button:hover {
+            background: #ff5252;
+        }
+
+        .analyze-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results display */
+        .results-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .results-container.show {
+            display: block;
+        }
+
+        .results-image-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .results-image {
+            max-width: 100%;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+
+        .defect-box {
+            position: absolute;
+            border: 3px solid red;
+            background: rgba(255, 0, 0, 0.1);
+            pointer-events: none;
+        }
+
+        .defect-label {
+            position: absolute;
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 4px;
+            top: -30px;
+            left: 0;
+            white-space: nowrap;
+        }
+
+        .defect-count {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+        }
+
+        /* ========================================
+           NAVIGATION BUTTONS
+           ======================================== */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .nav-buttons button {
+            flex: 1;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        .btn-next {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #5568d3;
+        }
+
+        /* ========================================
+           MOBILE RESPONSIVE
+           ======================================== */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+            }
+
+            .image-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            button {
+                min-height: 56px;
+                padding: 18px;
+            }
+
+            .step-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ========================================
+           HIDDEN ELEMENTS
+           ======================================== */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ Airplane Inspection App</h1>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1-indicator">
+                <div class="step-number">1</div>
+                <div class="step-label">Select Area</div>
+            </div>
+            <div class="step" id="step2-indicator">
+                <div class="step-number">2</div>
+                <div class="step-label">Upload Image</div>
+            </div>
+            <div class="step" id="step3-indicator">
+                <div class="step-number">3</div>
+                <div class="step-label">Analyze</div>
+            </div>
+        </div>
+
+        <!-- STEP 1: Area Selection -->
+        <div class="step-content active" id="step1">
+            <h2 class="step-title">Step 1: Select Inspection Area</h2>
+            <div class="dropdown-container">
+                <label for="areaSelect">Choose the part of the airplane to inspect:</label>
+                <select id="areaSelect">
+                    <option value="">-- Select an area --</option>
+                    <option value="fuselage">Fuselage</option>
+                    <option value="left-wing">Left Wing</option>
+                    <option value="right-wing">Right Wing</option>
+                    <option value="tail">Tail</option>
+                    <option value="landing-gear">Landing Gear</option>
+                    <option value="engine">Engine</option>
+                </select>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn-next" id="nextToStep2" disabled>Next →</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: Image Input -->
+        <div class="step-content" id="step2">
+            <h2 class="step-title">Step 2: Capture or Upload Image</h2>
+            
+            <!-- Image input buttons -->
+            <div class="image-buttons">
+                <button class="btn-primary" id="takePhotoBtn">📷 Take Photo</button>
+                <button class="btn-secondary" id="uploadImageBtn">📁 Upload Image</button>
+            </div>
+
+            <!-- Hidden file input -->
+            <input type="file" id="fileInput" accept="image/*" capture="environment">
+
+            <!-- Image preview -->
+            <div class="image-preview-container">
+                <img id="imagePreview" class="image-preview" alt="Preview">
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-back" id="backToStep1">← Back</button>
+                <button class="btn-next" id="nextToStep3" disabled>Next →</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Defect Detection -->
+        <div class="step-content" id="step3">
+            <h2 class="step-title">Step 3: Analyze for Defects</h2>
+            
+            <!-- Image preview in step 3 -->
+            <div class="image-preview-container">
+                <img id="step3ImagePreview" class="image-preview" alt="Image to analyze">
+            </div>
+
+            <!-- Analyze button -->
+            <button class="analyze-button" id="analyzeBtn">🔍 Analyze Image</button>
+
+            <!-- Loading spinner -->
+            <div class="loading" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px; color: #666;">Analyzing image... Please wait.</p>
+            </div>
+
+            <!-- Results container -->
+            <div class="results-container" id="resultsContainer">
+                <div class="defect-count" id="defectCount"></div>
+                <div class="results-image-container" id="resultsImageContainer"></div>
+            </div>
+
+            <div class="nav-buttons" style="margin-top: 20px;">
+                <button class="btn-back" id="backToStep2">← Back</button>
+                <button class="btn-next" id="startOverBtn">🔄 Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURATION: ROBOFLOW API SETUP
+        // ========================================
+        // TODO: Replace with your Roboflow API key
+        // Get your API key from: https://app.roboflow.com/
+        // 1. Sign up/login to Roboflow
+        // 2. Go to your workspace settings
+        // 3. Copy your API key
+        // 4. Paste it below
+        const ROBOFLOW_API_KEY = "NVvwlmp5v1ZAJNt2WyvR";
+        const ROBOFLOW_MODEL_ID = "aircraft-defect-detection-wsmlt/3"; // e.g., "airplane-inspection/1"
+        const ROBOFLOW_API_URL = `https://detect.roboflow.com/${aircraft-defect-detection-wsmlt/3}`;
+
+        // ========================================
+        // GLOBAL STATE VARIABLES
+        // ========================================
+        let currentStep = 1;
+        let selectedArea = "";
+        let selectedImage = null;
+
+        // ========================================
+        // STEP NAVIGATION FUNCTIONS
+        // ========================================
+        
+        // Function to update step indicators
+        function updateStepIndicators(step) {
+            // Reset all steps
+            document.querySelectorAll('.step').forEach((s, index) => {
+                s.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    s.classList.add('completed');
+                } else if (index + 1 === step) {
+                    s.classList.add('active');
+                }
+            });
+        }
+
+        // Function to show a specific step
+        function showStep(stepNumber) {
+            // Hide all step contents
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Show the selected step
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            
+            // Update indicators
+            updateStepIndicators(stepNumber);
+            currentStep = stepNumber;
+
+            // Special handling for step 3: show the image
+            if (stepNumber === 3 && selectedImage) {
+                const step3Preview = document.getElementById('step3ImagePreview');
+                step3Preview.src = selectedImage;
+                step3Preview.classList.add('show');
+            }
+        }
+
+        // ========================================
+        // STEP 1: AREA SELECTION
+        // ========================================
+        
+        const areaSelect = document.getElementById('areaSelect');
+        const nextToStep2Btn = document.getElementById('nextToStep2');
+
+        // Enable/disable Next button based on selection
+        areaSelect.addEventListener('change', function() {
+            selectedArea = this.value;
+            nextToStep2Btn.disabled = !selectedArea;
+        });
+
+        // Navigate to step 2
+        nextToStep2Btn.addEventListener('click', () => {
+            if (selectedArea) {
+                showStep(2);
+            }
+        });
+
+        // ========================================
+        // STEP 2: IMAGE INPUT
+        // ========================================
+        
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
+        const uploadImageBtn = document.getElementById('uploadImageBtn');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const nextToStep3Btn = document.getElementById('nextToStep3');
+        const backToStep1Btn = document.getElementById('backToStep1');
+
+        // Take Photo button - opens camera
+        takePhotoBtn.addEventListener('click', () => {
+            // Set capture attribute to use camera
+            fileInput.setAttribute('capture', 'environment');
+            fileInput.click();
+        });
+
+        // Upload Image button - opens file picker
+        uploadImageBtn.addEventListener('click', () => {
+            // Remove capture to allow file selection
+            fileInput.removeAttribute('capture');
+            fileInput.click();
+        });
+
+        // Handle file selection
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                // Create a FileReader to convert file to data URL
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    selectedImage = event.target.result;
+                    imagePreview.src = selectedImage;
+                    imagePreview.classList.add('show');
+                    nextToStep3Btn.disabled = false;
+                };
+                
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file.');
+            }
+        });
+
+        // Navigate to step 3
+        nextToStep3Btn.addEventListener('click', () => {
+            if (selectedImage) {
+                showStep(3);
+            }
+        });
+
+        // Navigate back to step 1
+        backToStep1Btn.addEventListener('click', () => {
+            showStep(1);
+        });
+
+        // ========================================
+        // STEP 3: DEFECT DETECTION
+        // ========================================
+        
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsImageContainer = document.getElementById('resultsImageContainer');
+        const defectCount = document.getElementById('defectCount');
+        const backToStep2Btn = document.getElementById('backToStep2');
+        const startOverBtn = document.getElementById('startOverBtn');
+
+        // Analyze button click handler
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedImage) {
+                alert('No image selected. Please go back and select an image.');
+                return;
+            }
+
+            // Check if API key is set
+            if (ROBOFLOW_API_KEY === "YOUR_KEY_HERE" || ROBOFLOW_MODEL_ID === "YOUR_MODEL_ID_HERE") {
+                alert('⚠️ Please configure your Roboflow API key and Model ID in the script section!');
+                return;
+            }
+
+            // Show loading spinner, hide results
+            loadingSpinner.classList.add('show');
+            resultsContainer.classList.remove('show');
+            analyzeBtn.disabled = true;
+
+            try {
+                // Convert data URL to blob for API
+                const blob = await dataURLToBlob(selectedImage);
+                
+                // Call Roboflow API
+                const predictions = await callRoboflowAPI(blob);
+                
+                // Display results
+                displayResults(selectedImage, predictions);
+                
+            } catch (error) {
+                console.error('Error analyzing image:', error);
+                alert('Failed to analyze image. Please check your API key and try again.\n\nError: ' + error.message);
+            } finally {
+                // Hide loading spinner
+                loadingSpinner.classList.remove('show');
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        // Convert data URL to Blob
+        function dataURLToBlob(dataURL) {
+            return fetch(dataURL).then(res => res.blob());
+        }
+
+        // Call Roboflow API
+        async function callRoboflowAPI(imageBlob) {
+            // Create FormData for multipart/form-data request
+            const formData = new FormData();
+            formData.append('file', imageBlob);
+
+            // Make API request
+            const response = await fetch(`${ROBOFLOW_API_URL}?api_key=${ROBOFLOW_API_KEY}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.predictions || [];
+        }
+
+        // Display results with defect boxes
+        function displayResults(imageSrc, predictions) {
+            // Clear previous results
+            resultsImageContainer.innerHTML = '';
+            defectCount.textContent = '';
+
+            // Create image element
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.className = 'results-image';
+            img.id = 'resultsImage';
+
+            // Wait for image to load to get dimensions
+            img.onload = function() {
+                const imgRect = this.getBoundingClientRect();
+                const imgNaturalWidth = this.naturalWidth;
+                const imgNaturalHeight = this.naturalHeight;
+                
+                const scaleX = imgRect.width / imgNaturalWidth;
+                const scaleY = imgRect.height / imgNaturalHeight;
+
+                // Create defect boxes
+                predictions.forEach((prediction, index) => {
+                    const box = document.createElement('div');
+                    box.className = 'defect-box';
+                    
+                    // Roboflow returns coordinates in the format: {x, y, width, height} or {x, y, x2, y2}
+                    // Adjust based on your model's output format
+                    const x = (prediction.x || prediction.x_center || 0) - (prediction.width || 0) / 2;
+                    const y = (prediction.y || prediction.y_center || 0) - (prediction.height || 0) / 2;
+                    const width = prediction.width || 0;
+                    const height = prediction.height || 0;
+
+                    // Scale coordinates to displayed image size
+                    box.style.left = `${x * scaleX}px`;
+                    box.style.top = `${y * scaleY}px`;
+                    box.style.width = `${width * scaleX}px`;
+                    box.style.height = `${height * scaleY}px`;
+
+                    // Add label if available
+                    if (prediction.class) {
+                        const label = document.createElement('div');
+                        label.className = 'defect-label';
+                        label.textContent = `${prediction.class} (${Math.round(prediction.confidence * 100)}%)`;
+                        box.appendChild(label);
+                    }
+
+                    resultsImageContainer.appendChild(box);
+                });
+
+                // Update defect count
+                const count = predictions.length;
+                if (count > 0) {
+                    defectCount.innerHTML = `
+                        <strong>⚠️ ${count} defect${count !== 1 ? 's' : ''} detected</strong>
+                        <br>Area: ${selectedArea.charAt(0).toUpperCase() + selectedArea.slice(1)}
+                    `;
+                } else {
+                    defectCount.innerHTML = `
+                        <strong>✓ No defects detected</strong>
+                        <br>Area: ${selectedArea.charAt(0).toUpperCase() + selectedArea.slice(1)}
+                    `;
+                    defectCount.style.background = '#d4edda';
+                    defectCount.style.borderLeftColor = '#28a745';
+                }
+            };
+
+            resultsImageContainer.appendChild(img);
+            resultsContainer.classList.add('show');
+        }
+
+        // Navigate back to step 2
+        backToStep2Btn.addEventListener('click', () => {
+            showStep(2);
+        });
+
+        // Start over - reset everything
+        startOverBtn.addEventListener('click', () => {
+            // Reset state
+            selectedArea = "";
+            selectedImage = null;
+            currentStep = 1;
+
+            // Reset UI
+            areaSelect.value = "";
+            nextToStep2Btn.disabled = true;
+            imagePreview.classList.remove('show');
+            nextToStep3Btn.disabled = true;
+            resultsContainer.classList.remove('show');
+            loadingSpinner.classList.remove('show');
+            
+            // Go back to step 1
+            showStep(1);
+        });
+    </script>
+</body>
+</html>

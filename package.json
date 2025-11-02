@@ -1,0 +1,37 @@
+{
+  "name": "airplane-inspection-app",
+  "version": "1.0.0",
+  "description": "Full-stack airplane inspection app with defect detection using Roboflow",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "test": "jest --config backend/jest.config.js --verbose",
+    "test:watch": "jest --config backend/jest.config.js --watch"
+  },
+  "keywords": [
+    "airplane",
+    "inspection",
+    "defect-detection",
+    "roboflow",
+    "computer-vision"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "form-data": "^4.0.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

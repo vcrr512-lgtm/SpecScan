@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airplane Inspection</title>
+    <style>
+        /* ========================================
+           RESET & BASE STYLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           PAGE SECTIONS (HIDDEN/SHOW)
+           ======================================== */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ========================================
+           PAGE 0: HOMEPAGE
+           ======================================== */
+        .homepage-container {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .left-tab {
+            width: 250px;
+            background: #f5f5f5;
+            border-right: 2px solid #000000;
+            padding: 30px 20px;
+        }
+
+        .tab-content {
+            font-size: 1rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000000;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .new-inspection-btn {
+            padding: 20px 50px;
+            background: #000000;
+            border: 2px solid #000000;
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            min-height: 70px;
+            min-width: 250px;
+        }
+
+        .new-inspection-btn:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* ========================================
+           PAGE 1: AREA SELECTION & IMAGE UPLOAD
+           ======================================== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 50px;
+            color: #000000;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 10px;
+        }
+
+        .area-section {
+            margin-bottom: 50px;
+        }
+
+        .area-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .area-btn {
+            padding: 20px 15px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .area-btn:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .area-btn.selected {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .image-section {
+            margin-top: 50px;
+        }
+
+        .image-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .image-btn {
+            padding: 18px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-height: 60px;
+        }
+
+        .image-btn:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .image-btn:disabled {
+            background: #f5f5f5;
+            border-color: #cccccc;
+            color: #999999;
+            cursor: not-allowed;
+        }
+
+        .image-btn:disabled:hover {
+            background: #f5f5f5;
+            color: #999999;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .image-preview-container {
+            margin-top: 30px;
+        }
+
+        .image-thumbnails-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .image-thumbnail-wrapper {
+            position: relative;
+            border: 2px solid #000000;
+            padding: 5px;
+            background: #ffffff;
+        }
+
+        .image-thumbnail {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-thumbnail-name {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .thumbnail-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .thumbnail-remove:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+
+        .analyze-btn-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .analyze-btn {
+            padding: 18px 50px;
+            background: #000000;
+            border: 2px solid #000000;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-height: 60px;
+            min-width: 200px;
+        }
+
+        .analyze-btn:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .analyze-btn:disabled {
+            background: #f5f5f5;
+            border-color: #cccccc;
+            color: #999999;
+            cursor: not-allowed;
+        }
+
+        .analyze-btn:disabled:hover {
+            background: #f5f5f5;
+            color: #999999;
+        }
+
+        /* ========================================
+           PAGE 2: ANALYSIS RESULTS
+           ======================================== */
+        .results-page-container {
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .results-header {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #000000;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .results-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .results-image-section {
+            position: relative;
+        }
+
+        .image-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 2px solid #000000;
+        }
+
+        .image-nav-btn {
+            padding: 10px 20px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 100px;
+        }
+
+        .image-nav-btn:hover:not(:disabled) {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .image-nav-btn:disabled {
+            background: #f5f5f5;
+            border-color: #cccccc;
+            color: #999999;
+            cursor: not-allowed;
+        }
+
+        .image-counter {
+            font-size: 1rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .results-image-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .results-image {
+            width: 100%;
+            height: auto;
+            border: 2px solid #000000;
+            display: block;
+        }
+
+        .defect-box {
+            position: absolute;
+            border: 3px solid red;
+            background: rgba(255, 0, 0, 0.1);
+            pointer-events: none;
+            box-sizing: border-box;
+            transition: border-width 0.2s, background 0.2s;
+        }
+
+        .defect-box.highlighted {
+            border: 4px solid #ffc107;
+            background: rgba(255, 193, 7, 0.3);
+            z-index: 100;
+        }
+
+        .defect-label {
+            position: absolute;
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 4px;
+            top: -30px;
+            left: 0;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .detections-list-section {
+            border: 2px solid #000000;
+            padding: 30px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .detections-header {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 15px;
+        }
+
+        .detection-item {
+            padding: 20px;
+            border-bottom: 1px solid #cccccc;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .detection-item:hover {
+            background: #f5f5f5;
+        }
+
+        .detection-item.highlighted {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+        }
+
+        .detection-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .detection-header {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .defect-thumbnail {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px solid #000000;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .defect-thumbnail:hover {
+            transform: scale(1.05);
+            border-color: #ff0000;
+        }
+
+        .detection-info {
+            flex: 1;
+        }
+
+        .detection-type {
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 1rem;
+        }
+
+        .detection-confidence {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .detection-image-source {
+            color: #666666;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+
+        .detection-coords {
+            color: #999999;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .no-detections {
+            padding: 40px;
+            text-align: center;
+            border: 2px solid #000000;
+            margin-top: 20px;
+        }
+
+        .no-detections-text {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .inspect-another-btn {
+            margin-top: 40px;
+            padding: 18px 50px;
+            background: #000000;
+            border: 2px solid #000000;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-height: 60px;
+            width: 100%;
+        }
+
+        .inspect-another-btn:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f5f5f5;
+            border-top: 3px solid #000000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ========================================
+           MOBILE RESPONSIVE
+           ======================================== */
+        @media (max-width: 900px) {
+            .homepage-container {
+                flex-direction: column;
+            }
+
+            .left-tab {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #000000;
+                padding: 20px;
+            }
+
+            .results-layout {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .detections-list-section {
+                max-height: none;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+
+            .area-buttons {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .image-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .analyze-btn {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 0: Homepage -->
+    <div class="page active" id="page0">
+        <div class="homepage-container">
+            <div class="left-tab">
+                <div class="tab-content">
+                    <div>Inspection</div>
+                    <div style="margin-top: 20px; font-size: 0.85rem; color: #666;">Airplane Inspection System</div>
+                </div>
+            </div>
+            <div class="main-content">
+                <button class="new-inspection-btn" id="newInspectionBtn">New Inspection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 1: Area Selection & Image Upload -->
+    <div class="page" id="page1">
+        <div class="container">
+            <h1>Airplane Inspection</h1>
+
+            <div class="area-section">
+                <h2>Select Area</h2>
+                <div class="area-buttons">
+                    <button class="area-btn" data-area="fuselage">Fuselage</button>
+                    <button class="area-btn" data-area="left-wing">Left Wing</button>
+                    <button class="area-btn" data-area="right-wing">Right Wing</button>
+                    <button class="area-btn" data-area="tail">Tail</button>
+                    <button class="area-btn" data-area="engine">Engine</button>
+                    <button class="area-btn" data-area="landing-gear">Landing Gear</button>
+                </div>
+            </div>
+
+            <div class="image-section">
+                <h2>Capture or Upload Image</h2>
+                <div class="image-buttons">
+                    <button class="image-btn" id="takePhotoBtn">Take Photo</button>
+                    <button class="image-btn" id="uploadImageBtn">Upload Image</button>
+                </div>
+
+                <input type="file" id="fileInput" accept="image/*" capture="environment" multiple>
+
+                <div class="image-preview-container">
+                    <div id="imageThumbnailsGrid" class="image-thumbnails-grid"></div>
+                </div>
+
+                <div class="analyze-btn-container">
+                    <button class="analyze-btn" id="analyzeBtn" disabled>Analyze Images</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: Analysis Results -->
+    <div class="page" id="page2">
+        <div class="results-page-container">
+            <div class="loading" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Analyzing image... Please wait.</p>
+            </div>
+
+            <div class="results-content" id="resultsContent" style="display: none;">
+                <h1 class="results-header">Inspection Results</h1>
+                
+                <div class="results-layout">
+                    <!-- Left Side: Image with Detections -->
+                    <div class="results-image-section">
+                        <div class="image-navigation" id="imageNavigation" style="display: none;">
+                            <button class="image-nav-btn" id="prevImageBtn" onclick="navigateImage(-1)">← Previous</button>
+                            <div class="image-counter" id="imageCounter"></div>
+                            <button class="image-nav-btn" id="nextImageBtn" onclick="navigateImage(1)">Next →</button>
+                        </div>
+                        <div class="results-image-wrapper" id="resultsImageWrapper">
+                            <img id="resultsImage" class="results-image" alt="Analysis results">
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Detections List -->
+                    <div class="detections-list-section">
+                        <h2 class="detections-header">All Detections</h2>
+                        <div id="detectionsContainer"></div>
+                        <button class="inspect-another-btn" id="inspectAnotherBtn">Inspect Another Area</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURATION
+        // ========================================
+        const API_BASE_URL = window.location.origin;
+        const API_ANALYZE_ENDPOINT = `${API_BASE_URL}/api/analyze`;
+
+        // ========================================
+        // GLOBAL STATE
+        // ========================================
+        let selectedArea = "";
+        let selectedImages = []; // Array of {file, dataURL, index}
+        let selectedImageFiles = [];
+        let currentPredictions = [];
+        let allImageResults = []; // Store results for all images
+        let currentImageIndex = 0; // Track which image is currently displayed
+        let imageNaturalWidth = 0;
+        let imageNaturalHeight = 0;
+
+        // ========================================
+        // PAGE NAVIGATION
+        // ========================================
+        function showPage(pageNumber) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`page${pageNumber}`).classList.add('active');
+        }
+
+        // ========================================
+        // PAGE 0: HOMEPAGE
+        // ========================================
+        document.getElementById('newInspectionBtn').addEventListener('click', () => {
+            showPage(1);
+        });
+
+        // ========================================
+        // PAGE 1: AREA SELECTION
+        // ========================================
+        const areaButtons = document.querySelectorAll('.area-btn');
+        
+        areaButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove selection from all buttons
+                areaButtons.forEach(b => b.classList.remove('selected'));
+                // Add selection to clicked button
+                this.classList.add('selected');
+                selectedArea = this.dataset.area;
+                updateAnalyzeButton();
+            });
+        });
+
+        // ========================================
+        // PAGE 1: IMAGE INPUT
+        // ========================================
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
+        const uploadImageBtn = document.getElementById('uploadImageBtn');
+        const fileInput = document.getElementById('fileInput');
+        const imageThumbnailsGrid = document.getElementById('imageThumbnailsGrid');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        takePhotoBtn.addEventListener('click', () => {
+            fileInput.setAttribute('capture', 'environment');
+            fileInput.removeAttribute('multiple');
+            fileInput.click();
+        });
+
+        uploadImageBtn.addEventListener('click', () => {
+            fileInput.removeAttribute('capture');
+            fileInput.setAttribute('multiple', 'multiple');
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            // Filter valid image files
+            const validFiles = files.filter(file => file.type.startsWith('image/'));
+            
+            if (validFiles.length === 0) {
+                alert('Please select valid image files.');
+                return;
+            }
+
+            // Process each file
+            validFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const dataURL = event.target.result;
+                    const imageData = {
+                        file: file,
+                        dataURL: dataURL,
+                        index: selectedImages.length
+                    };
+                    
+                    selectedImages.push(imageData);
+                    selectedImageFiles.push(file);
+                    
+                    addImageThumbnail(imageData);
+                    updateAnalyzeButton();
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function addImageThumbnail(imageData) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'image-thumbnail-wrapper';
+            wrapper.dataset.index = imageData.index;
+            
+            const img = document.createElement('img');
+            img.src = imageData.dataURL;
+            img.className = 'image-thumbnail';
+            img.alt = imageData.file.name;
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'image-thumbnail-name';
+            nameDiv.textContent = imageData.file.name.length > 20 
+                ? imageData.file.name.substring(0, 20) + '...' 
+                : imageData.file.name;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'thumbnail-remove';
+            removeBtn.innerHTML = '×';
+            removeBtn.onclick = () => removeImage(imageData.index);
+            
+            wrapper.appendChild(img);
+            wrapper.appendChild(nameDiv);
+            wrapper.appendChild(removeBtn);
+            
+            imageThumbnailsGrid.appendChild(wrapper);
+        }
+
+        function removeImage(index) {
+            // Remove from arrays
+            selectedImages = selectedImages.filter((img, i) => {
+                if (i === index) return false;
+                if (i > index) img.index--; // Update indices
+                return true;
+            });
+            selectedImageFiles = selectedImageFiles.filter((_, i) => i !== index);
+            
+            // Remove from DOM
+            const wrapper = document.querySelector(`[data-index="${index}"]`);
+            if (wrapper) wrapper.remove();
+            
+            // Update remaining indices
+            document.querySelectorAll('.image-thumbnail-wrapper').forEach(w => {
+                const idx = parseInt(w.dataset.index);
+                if (idx > index) w.dataset.index = idx - 1;
+            });
+            
+            updateAnalyzeButton();
+        }
+
+        function updateAnalyzeButton() {
+            analyzeBtn.disabled = !(selectedArea && selectedImageFiles.length > 0);
+        }
+
+        // ========================================
+        // PAGE 1: ANALYZE BUTTON
+        // ========================================
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedImageFiles || selectedImageFiles.length === 0 || !selectedArea) {
+                alert('Please select an area and upload at least one image.');
+                return;
+            }
+
+            // Show page 2 with loading
+            showPage(2);
+            document.getElementById('loadingSpinner').classList.add('show');
+            document.getElementById('resultsContent').style.display = 'none';
+
+            try {
+                const result = await callBackendAPI(selectedImageFiles, selectedArea);
+                allImageResults = result.results || [];
+                currentPredictions = result.predictions || [];
+                currentImageIndex = 0;
+                
+                // Display results with first image
+                if (allImageResults.length > 0 && selectedImages.length > 0) {
+                    displayResults(selectedImages, allImageResults, currentPredictions, selectedArea);
+                }
+            } catch (error) {
+                console.error('Error analyzing images:', error);
+                let errorMessage = 'Failed to analyze images.';
+                
+                if (error.response) {
+                    errorMessage = error.response.message || error.message;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                alert(`Error: ${errorMessage}\n\nPlease check:\n- Server is running\n- API keys are configured in .env file`);
+                
+                // Go back to page 1
+                showPage(1);
+            } finally {
+                document.getElementById('loadingSpinner').classList.remove('show');
+            }
+        });
+
+        // ========================================
+        // API CALL
+        // ========================================
+        async function callBackendAPI(imageFiles, area) {
+            const formData = new FormData();
+            
+            // Append all image files
+            imageFiles.forEach(file => {
+                formData.append('image', file);
+            });
+            
+            formData.append('area', area);
+
+            const response = await fetch(API_ANALYZE_ENDPOINT, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw {
+                    response: errorData,
+                    message: errorData.message || `Server error: ${response.status} ${response.statusText}`
+                };
+            }
+
+            return await response.json();
+        }
+
+        // ========================================
+        // PAGE 2: DISPLAY RESULTS
+        // ========================================
+        function displayResults(images, imageResults, allPredictions, area) {
+            const resultsImage = document.getElementById('resultsImage');
+            const resultsImageWrapper = document.getElementById('resultsImageWrapper');
+            const detectionsContainer = document.getElementById('detectionsContainer');
+            
+            // Clear previous content
+            detectionsContainer.innerHTML = '';
+            const existingBoxes = resultsImageWrapper.querySelectorAll('.defect-box');
+            existingBoxes.forEach(box => box.remove());
+            
+            // Show first image by default
+            if (images.length > 0 && imageResults.length > 0) {
+                showImageResults(0, images, imageResults, allPredictions, area);
+            }
+        }
+
+        function navigateImage(direction) {
+            if (allImageResults.length === 0 || selectedImages.length === 0) return;
+            
+            const newIndex = currentImageIndex + direction;
+            if (newIndex >= 0 && newIndex < selectedImages.length) {
+                showImageResults(newIndex, selectedImages, allImageResults, currentPredictions, selectedArea);
+            }
+        }
+
+        function showImageResults(imageIndex, images, imageResults, allPredictions, area) {
+            const resultsImage = document.getElementById('resultsImage');
+            const resultsImageWrapper = document.getElementById('resultsImageWrapper');
+            const detectionsContainer = document.getElementById('detectionsContainer');
+            
+            currentImageIndex = imageIndex;
+            const imageData = images[imageIndex];
+            const imageResult = imageResults[imageIndex];
+            
+            if (!imageData || !imageResult) return;
+            
+            // Clear previous boxes
+            const existingBoxes = resultsImageWrapper.querySelectorAll('.defect-box');
+            existingBoxes.forEach(box => box.remove());
+            
+            // Show image
+            resultsImage.src = imageData.dataURL;
+            
+            // Get predictions for this image
+            const imagePredictions = allPredictions.filter(p => p.imageIndex === imageIndex);
+            
+            // Wait for image to load before drawing boxes
+            resultsImage.onload = function() {
+                imageNaturalWidth = this.naturalWidth;
+                imageNaturalHeight = this.naturalHeight;
+                
+                const imgRect = this.getBoundingClientRect();
+                const scaleX = imgRect.width / imageNaturalWidth;
+                const scaleY = imgRect.height / imageNaturalHeight;
+
+                // Create defect boxes and extract thumbnails
+                imagePredictions.forEach((prediction, index) => {
+                    // Get coordinates
+                    let x, y, width, height;
+                    
+                    if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
+                        x = prediction.x_center - prediction.width / 2;
+                        y = prediction.y_center - prediction.height / 2;
+                        width = prediction.width;
+                        height = prediction.height;
+                    } else if (prediction.x !== undefined && prediction.y !== undefined) {
+                        x = prediction.x;
+                        y = prediction.y;
+                        width = prediction.width || 0;
+                        height = prediction.height || 0;
+                    } else {
+                        const bbox = prediction.bbox || {};
+                        x = bbox.x || 0;
+                        y = bbox.y || 0;
+                        width = bbox.width || 0;
+                        height = bbox.height || 0;
+                    }
+
+                    // Create box
+                    const box = document.createElement('div');
+                    box.className = 'defect-box';
+                    box.dataset.predictionIndex = index;
+                    
+                    const scaledX = x * scaleX;
+                    const scaledY = y * scaleY;
+                    const scaledWidth = width * scaleX;
+                    const scaledHeight = height * scaleY;
+
+                    box.style.left = `${scaledX}px`;
+                    box.style.top = `${scaledY}px`;
+                    box.style.width = `${scaledWidth}px`;
+                    box.style.height = `${scaledHeight}px`;
+
+                    // Add label
+                    if (prediction.class) {
+                        const label = document.createElement('div');
+                        label.className = 'defect-label';
+                        const confidence = prediction.confidence 
+                            ? Math.round(prediction.confidence * 100) 
+                            : (prediction.confidence_percent || 0);
+                        label.textContent = `${prediction.class} (${confidence}%)`;
+                        box.appendChild(label);
+                    }
+
+                    resultsImageWrapper.appendChild(box);
+                });
+            };
+            
+            // Display detections list with thumbnails
+            detectionsContainer.innerHTML = '';
+            
+            if (imagePredictions.length === 0) {
+                detectionsContainer.innerHTML = `
+                    <div class="no-detections">
+                        <div class="no-detections-text">No Defects Detected</div>
+                        <div style="margin-top: 15px; color: #666; font-size: 0.9rem;">Area: ${formatAreaName(area)}</div>
+                        <div style="margin-top: 10px; color: #666; font-size: 0.85rem;">Image: ${imageData.file.name}</div>
+                    </div>
+                `;
+            } else {
+                // Create thumbnails for each defect
+                imagePredictions.forEach((prediction, index) => {
+                    createDefectThumbnail(prediction, imageData, index, imagePredictions.length);
+                });
+
+                // Add summary info
+                const summary = document.createElement('div');
+                summary.className = 'detection-item';
+                summary.style.borderTop = '2px solid #000000';
+                summary.style.marginTop = '20px';
+                summary.style.paddingTop = '20px';
+                summary.innerHTML = `
+                    <div style="color: #666; font-weight: 500;">Area Inspected: ${formatAreaName(area)}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Image: ${imageData.file.name}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Defects in this image: ${imagePredictions.length}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Total images: ${images.length}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Total defects (all images): ${allPredictions.length}</div>
+                `;
+                detectionsContainer.appendChild(summary);
+            }
+
+            // Show/hide navigation based on number of images
+            const imageNavigation = document.getElementById('imageNavigation');
+            if (images.length > 1) {
+                imageNavigation.style.display = 'flex';
+                document.getElementById('prevImageBtn').disabled = imageIndex === 0;
+                document.getElementById('nextImageBtn').disabled = imageIndex === images.length - 1;
+                document.getElementById('imageCounter').textContent = `Image ${imageIndex + 1} of ${images.length}`;
+            } else {
+                imageNavigation.style.display = 'none';
+            }
+
+            // Show results content
+            document.getElementById('resultsContent').style.display = 'block';
+        }
+
+        function createDefectThumbnail(prediction, imageData, index, totalDefects) {
+            const detectionsContainer = document.getElementById('detectionsContainer');
+            
+            // Extract defect coordinates
+            let x, y, width, height;
+            
+            if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
+                x = prediction.x_center - prediction.width / 2;
+                y = prediction.y_center - prediction.height / 2;
+                width = prediction.width;
+                height = prediction.height;
+            } else if (prediction.x !== undefined && prediction.y !== undefined) {
+                x = prediction.x;
+                y = prediction.y;
+                width = prediction.width || 0;
+                height = prediction.height || 0;
+            } else {
+                const bbox = prediction.bbox || {};
+                x = bbox.x || 0;
+                y = bbox.y || 0;
+                width = bbox.width || 0;
+                height = bbox.height || 0;
+            }
+
+            // Create canvas to crop defect
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Ensure coordinates are within image bounds
+                const cropX = Math.max(0, Math.min(x, img.width));
+                const cropY = Math.max(0, Math.min(y, img.height));
+                const cropWidth = Math.max(1, Math.min(width, img.width - cropX));
+                const cropHeight = Math.max(1, Math.min(height, img.height - cropY));
+                
+                canvas.width = cropWidth;
+                canvas.height = cropHeight;
+                ctx.drawImage(img, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+                
+                const thumbnailDataURL = canvas.toDataURL('image/jpeg', 0.9);
+                
+                // Create detection item
+                const detectionItem = document.createElement('div');
+                detectionItem.className = 'detection-item';
+                detectionItem.dataset.predictionIndex = index;
+                detectionItem.onclick = () => highlightDefect(index);
+                
+                const confidence = prediction.confidence 
+                    ? Math.round(prediction.confidence * 100) 
+                    : (prediction.confidence_percent || 0);
+                
+                let coordsText = '';
+                if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
+                    coordsText = `Center: (${Math.round(prediction.x_center)}, ${Math.round(prediction.y_center)})`;
+                } else if (prediction.x !== undefined && prediction.y !== undefined) {
+                    coordsText = `Position: (${Math.round(prediction.x)}, ${Math.round(prediction.y)})`;
+                }
+                
+                detectionItem.innerHTML = `
+                    <div class="detection-header">
+                        <img src="${thumbnailDataURL}" alt="Defect thumbnail" class="defect-thumbnail" onclick="event.stopPropagation(); highlightDefect(${index})">
+                        <div class="detection-info">
+                            <div class="detection-type">${prediction.class || 'Defect ' + (index + 1)}</div>
+                            <div class="detection-confidence">Confidence: ${confidence}%</div>
+                            <div class="detection-image-source">From: ${imageData.file.name}</div>
+                            ${coordsText ? `<div class="detection-coords">${coordsText}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                detectionsContainer.appendChild(detectionItem);
+            };
+            img.src = imageData.dataURL;
+        }
+
+        function highlightDefect(predictionIndex) {
+            // Remove previous highlights
+            document.querySelectorAll('.defect-box.highlighted').forEach(box => {
+                box.classList.remove('highlighted');
+            });
+            document.querySelectorAll('.detection-item.highlighted').forEach(item => {
+                item.classList.remove('highlighted');
+            });
+            
+            // Highlight the box
+            const box = document.querySelector(`.defect-box[data-prediction-index="${predictionIndex}"]`);
+            if (box) {
+                box.classList.add('highlighted');
+                // Scroll the image into view if needed
+                const resultsImage = document.getElementById('resultsImage');
+                resultsImage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Also try to scroll the box into view within the image container
+                setTimeout(() => {
+                    const wrapper = document.getElementById('resultsImageWrapper');
+                    const wrapperRect = wrapper.getBoundingClientRect();
+                    const boxRect = box.getBoundingClientRect();
+                    if (boxRect.top < wrapperRect.top || boxRect.bottom > wrapperRect.bottom) {
+                        box.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                    }
+                }, 100);
+            }
+            
+            // Highlight the detection item
+            const item = document.querySelector(`.detection-item[data-prediction-index="${predictionIndex}"]`);
+            if (item) {
+                item.classList.add('highlighted');
+                setTimeout(() => {
+                    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }
+        }
+
+        function formatAreaName(area) {
+            return area.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        // ========================================
+        // PAGE 2: INSPECT ANOTHER AREA BUTTON
+        // ========================================
+        document.getElementById('inspectAnotherBtn').addEventListener('click', () => {
+            // Reset state
+            selectedArea = "";
+            selectedImages = [];
+            selectedImageFiles = [];
+            currentPredictions = [];
+            allImageResults = [];
+            currentImageIndex = 0;
+            
+            // Reset UI
+            areaButtons.forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('imageThumbnailsGrid').innerHTML = '';
+            fileInput.value = "";
+            analyzeBtn.disabled = true;
+            
+            // Go back to page 1 (area selection)
+            showPage(1);
+        });
+    </script>
+</body>
+</html>

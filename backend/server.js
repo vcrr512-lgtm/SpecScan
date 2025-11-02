@@ -260,11 +260,11 @@ if (process.env.NODE_ENV !== 'test') {
 ║   Airplane Inspection App - Server    ║
 ╚════════════════════════════════════════╝
     
-🚀 Server running on: http://localhost:${PORT}
-📱 Mobile access: http://[YOUR_IP]:${PORT}
-🌐 Browser access: http://localhost:${PORT}
+ Server running on: http://localhost:${PORT}
+ Mobile access: http://[YOUR_IP]:${PORT}
+ Browser access: http://localhost:${PORT}
 
-⚠️  Make sure to configure:
+  Make sure to configure:
    - ROBOFLOW_API_KEY in .env file
    - ROBOFLOW_MODEL_ID in .env file
         `);

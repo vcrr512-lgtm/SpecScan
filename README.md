@@ -1,8 +1,8 @@
-# ✈️ Airplane Inspection App
+# Airplane Inspection App
 
 A full-stack web application for airplane inspection with AI-powered defect detection using Roboflow. Works seamlessly on both desktop browsers and mobile devices.
 
-## 🚀 Features
+## Features
 
 - **3-Step Inspection Process:**
   1. Select airplane area (Fuselage, Wings, Tail, Landing Gear, Engine)
@@ -19,13 +19,13 @@ A full-stack web application for airplane inspection with AI-powered defect dete
   - File upload validation
   - Error handling and logging
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 14.0.0 or higher
 - npm or yarn
 - Roboflow account and API key ([Get one here](https://app.roboflow.com/))
 
-## 🛠️ Installation
+## Installation
 
 1. **Clone or download this repository**
 
@@ -65,7 +65,7 @@ A full-stack web application for airplane inspection with AI-powered defect dete
    - Mobile: http://[YOUR_COMPUTER_IP]:3000
      - Find your IP: `ipconfig` (Windows) or `ifconfig` (Mac/Linux)
 
-## 🧪 Testing
+## Testing
 
 ### Run Tests
 ```bash
@@ -94,7 +94,7 @@ npm test
    - [ ] Verify CORS is enabled
    - [ ] Test error handling
 
-## 📱 Mobile Testing Setup
+## Mobile Testing Setup
 
 ### Find Your Computer's IP Address
 
@@ -126,7 +126,7 @@ ip addr show
 - **Connection refused:** Make sure server is running
 - **Slow performance:** Check network speed, image file sizes
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 SpecScan_v1/
@@ -142,7 +142,7 @@ SpecScan_v1/
     └── server.test.js    # API tests
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -162,7 +162,7 @@ Edit `public/index.html` to modify the available inspection areas:
 </select>
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Server Issues
 
@@ -204,7 +204,7 @@ npm install
 - Check firewall/antivirus settings
 - Try accessing with IP address instead of localhost
 
-## 📝 API Endpoints
+## API Endpoints
 
 ### `GET /api/health`
 Health check endpoint.
@@ -244,21 +244,21 @@ Analyze an image for defects.
 }
 ```
 
-## 🔒 Security Notes
+## Security Notes
 
 - API keys are stored server-side only (never exposed to client)
 - File uploads are validated (images only, max 10MB)
 - CORS is enabled for development (restrict in production)
 
-## 📄 License
+## License
 
 MIT License - feel free to use this project for your own purposes.
 
-## 🤝 Contributing
+## Contributing
 
 This is a simple demonstration project. Feel free to fork and modify as needed!
 
-## 📞 Support
+## Support
 
 For issues:
 1. Check the troubleshooting section
@@ -267,4 +267,3 @@ For issues:
 
 ---
 
-**Happy Inspecting! ✈️**

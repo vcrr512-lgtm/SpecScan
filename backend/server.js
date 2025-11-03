@@ -27,6 +27,9 @@ app.use(express.json());
 // Serve static files from frontend public directory
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
+// Serve uiImage directory for plane illustration
+app.use('/uiImage', express.static(path.join(__dirname, '../uiImage')));
+
 // Configure multer for file uploads (in memory)
 const upload = multer({
     storage: multer.memoryStorage(),

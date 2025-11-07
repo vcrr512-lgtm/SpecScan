@@ -2356,64 +2356,130 @@
         function createDefectThumbnail(prediction, imageData, index, totalDefects, imageIndex) {
             const detectionsContainer = document.getElementById('detectionsContainer');
             
+            // Extract defect coordinates (same logic as main image boxes)
+            let x, y, width, height;
+            
+            // Get width and height first
+            width = prediction.width || 0;
+            height = prediction.height || 0;
+            
+            // Handle different coordinate formats
+            if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
+                x = prediction.x_center - width / 2;
+                y = prediction.y_center - height / 2;
+            } else if (prediction.x !== undefined && prediction.y !== undefined) {
+                if (width > 0 && height > 0) {
+                    // Assume center coordinates (Roboflow standard)
+                    x = prediction.x - width / 2;
+                    y = prediction.y - height / 2;
+                } else {
+                    x = prediction.x;
+                    y = prediction.y;
+                }
+            } else {
+                const bbox = prediction.bbox || {};
+                if (bbox.x_center !== undefined && bbox.y_center !== undefined) {
+                    x = bbox.x_center - (bbox.width || width) / 2;
+                    y = bbox.y_center - (bbox.height || height) / 2;
+                    width = bbox.width || width;
+                    height = bbox.height || height;
+                } else {
+                    x = bbox.x || 0;
+                    y = bbox.y || 0;
+                    width = bbox.width || width;
+                    height = bbox.height || height;
+                }
+            }
+
             // Create unique prediction ID
             const predictionId = getPredictionId(prediction, imageIndex);
             
             // Check if this is already marked as false positive
             const isFalsePositive = falsePositives.has(predictionId);
 
-            // Create detection item without thumbnail image for better performance
-            const detectionItem = document.createElement('div');
-            detectionItem.className = 'detection-item' + (isFalsePositive ? ' false-positive' : '');
-            detectionItem.dataset.predictionIndex = index;
-            detectionItem.dataset.predictionId = predictionId;
-            detectionItem.onclick = (e) => {
-                // Don't highlight if clicking on checkbox
-                if (!e.target.classList.contains('false-positive-checkbox')) {
-                    highlightDefect(index);
+            // Create canvas to crop defect
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Ensure coordinates are within image bounds
+                const cropX = Math.max(0, Math.min(x, img.width));
+                const cropY = Math.max(0, Math.min(y, img.height));
+                const cropWidth = Math.max(1, Math.min(width, img.width - cropX));
+                const cropHeight = Math.max(1, Math.min(height, img.height - cropY));
+                
+                canvas.width = cropWidth;
+                canvas.height = cropHeight;
+                ctx.drawImage(img, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+                
+                const thumbnailDataURL = canvas.toDataURL('image/jpeg', 0.9);
+                
+                // Create detection item
+                const detectionItem = document.createElement('div');
+                detectionItem.className = 'detection-item' + (isFalsePositive ? ' false-positive' : '');
+                detectionItem.dataset.predictionIndex = index;
+                detectionItem.dataset.predictionId = predictionId;
+                detectionItem.onclick = (e) => {
+                    // Don't highlight if clicking on checkbox
+                    if (!e.target.classList.contains('false-positive-checkbox')) {
+                        highlightDefect(index);
+                    }
+                };
+                
+                const confidence = prediction.confidence 
+                    ? Math.round(prediction.confidence * 100) 
+                    : (prediction.confidence_percent || 0);
+                
+                let coordsText = '';
+                if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
+                    coordsText = `Center: (${Math.round(prediction.x_center)}, ${Math.round(prediction.y_center)})`;
+                } else if (prediction.x !== undefined && prediction.y !== undefined) {
+                    coordsText = `Position: (${Math.round(prediction.x)}, ${Math.round(prediction.y)})`;
                 }
+                
+                // Create X button in top-right corner
+                const xButton = document.createElement('button');
+                xButton.className = 'false-positive-x-button';
+                xButton.innerHTML = '×';
+                xButton.title = isFalsePositive ? 'Restore detection' : 'Mark as False Positive';
+                xButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFalsePositive(predictionId, imageIndex, index);
+                });
+                
+                // Create detection header
+                const header = document.createElement('div');
+                header.className = 'detection-header';
+                
+                const thumbnailImg = document.createElement('img');
+                thumbnailImg.src = thumbnailDataURL;
+                thumbnailImg.alt = 'Defect thumbnail';
+                thumbnailImg.className = 'defect-thumbnail';
+                thumbnailImg.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    highlightDefect(index);
+                });
+                
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'detection-info';
+                infoDiv.innerHTML = `
+                    <div class="detection-type">${prediction.class || 'Defect ' + (index + 1)}</div>
+                    <div class="detection-confidence">Confidence: ${confidence}%</div>
+                    <div class="detection-image-source">From: ${imageData.file.name}</div>
+                    ${coordsText ? `<div class="detection-coords">${coordsText}</div>` : ''}
+                `;
+                
+                header.appendChild(thumbnailImg);
+                header.appendChild(infoDiv);
+                
+                detectionItem.appendChild(header);
+                detectionItem.appendChild(xButton);
+                
+                detectionsContainer.appendChild(detectionItem);
             };
-            
-            const confidence = prediction.confidence 
-                ? Math.round(prediction.confidence * 100) 
-                : (prediction.confidence_percent || 0);
-            
-            let coordsText = '';
-            if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
-                coordsText = `Center: (${Math.round(prediction.x_center)}, ${Math.round(prediction.y_center)})`;
-            } else if (prediction.x !== undefined && prediction.y !== undefined) {
-                coordsText = `Position: (${Math.round(prediction.x)}, ${Math.round(prediction.y)})`;
-            }
-            
-            // Create X button in top-right corner
-            const xButton = document.createElement('button');
-            xButton.className = 'false-positive-x-button';
-            xButton.innerHTML = '×';
-            xButton.title = isFalsePositive ? 'Restore detection' : 'Mark as False Positive';
-            xButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleFalsePositive(predictionId, imageIndex, index);
-            });
-            
-            // Create detection header
-            const header = document.createElement('div');
-            header.className = 'detection-header';
-            
-            const infoDiv = document.createElement('div');
-            infoDiv.className = 'detection-info';
-            infoDiv.innerHTML = `
-                <div class="detection-type">${prediction.class || 'Defect ' + (index + 1)}</div>
-                <div class="detection-confidence">Confidence: ${confidence}%</div>
-                <div class="detection-image-source">From: ${imageData.file.name}</div>
-                ${coordsText ? `<div class="detection-coords">${coordsText}</div>` : ''}
-            `;
-            
-            header.appendChild(infoDiv);
-            
-            detectionItem.appendChild(header);
-            detectionItem.appendChild(xButton);
-            
-            detectionsContainer.appendChild(detectionItem);
+            img.src = imageData.dataURL;
         }
 
         function highlightDefect(predictionIndex) {

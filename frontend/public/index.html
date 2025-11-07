@@ -980,36 +980,6 @@
             color: #000000;
             letter-spacing: 2px;
             text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 0 20px;
-        }
-
-        .home-btn {
-            padding: 12px 24px;
-            background: #ffffff;
-            border: 2px solid #000000;
-            color: #000000;
-            font-size: 0.9rem;
-            font-weight: 400;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            min-height: 50px;
-        }
-
-        .home-btn:hover {
-            background: #000000;
-            color: #ffffff;
-        }
-
-        .results-header-text {
-            flex: 1;
         }
 
         .results-layout {
@@ -1112,90 +1082,27 @@
 
         .detections-list-section {
             border: 2px solid #000000;
-            padding: 15px;
+            padding: 30px;
             max-height: calc(100vh - 200px);
             overflow-y: auto;
         }
 
         .detections-header {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 400;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
             text-transform: uppercase;
             letter-spacing: 1px;
             border-bottom: 2px solid #000000;
-            padding-bottom: 10px;
-        }
-
-        .confidence-filter-section {
-            margin-bottom: 15px;
-            padding: 12px;
-            background: #f5f5f5;
-            border: 1px solid #000000;
-        }
-
-        .confidence-filter-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .confidence-filter-value {
-            font-weight: 600;
-            color: #000000;
-        }
-
-        .confidence-slider {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #ddd;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .confidence-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #000000;
-            cursor: pointer;
-            border: 2px solid #ffffff;
-        }
-
-        .confidence-slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #000000;
-            cursor: pointer;
-            border: 2px solid #ffffff;
-        }
-
-        .detection-count {
-            font-size: 0.75rem;
-            color: #666666;
-            margin-top: 5px;
-            text-align: right;
+            padding-bottom: 15px;
         }
 
         .detection-item {
-            padding: 12px;
+            padding: 20px;
             border-bottom: 1px solid #cccccc;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             cursor: pointer;
-            transition: background 0.2s, opacity 0.2s;
-            display: flex;
-            gap: 10px;
-            position: relative;
+            transition: background 0.2s;
         }
 
         .detection-item:hover {
@@ -1207,14 +1114,6 @@
             border: 2px solid #ffc107;
         }
 
-        .detection-item.false-positive {
-            opacity: 0.4;
-        }
-
-        .detection-item.false-positive:hover {
-            opacity: 0.5;
-        }
-
         .detection-item:last-child {
             border-bottom: none;
             margin-bottom: 0;
@@ -1222,53 +1121,13 @@
 
         .detection-header {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: flex-start;
-            flex: 1;
-        }
-
-        .false-positive-x-button {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 24px;
-            height: 24px;
-            background: #ff0000;
-            color: white;
-            border: 2px solid #000000;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            line-height: 1;
-            transition: all 0.2s;
-            z-index: 10;
-            flex-shrink: 0;
-        }
-
-        .false-positive-x-button:hover {
-            background: #cc0000;
-            transform: scale(1.1);
-        }
-
-        .detection-item.false-positive .false-positive-x-button {
-            background: #999999;
-            border-color: #666666;
-            opacity: 0.6;
-            font-size: 16px;
-        }
-
-        .detection-item.false-positive .false-positive-x-button:hover {
-            background: #666666;
-            opacity: 0.8;
         }
 
         .defect-thumbnail {
-            width: 72px;
-            height: 72px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
             border: 2px solid #000000;
             flex-shrink: 0;
@@ -1283,43 +1142,33 @@
 
         .detection-info {
             flex: 1;
-            min-width: 0;
         }
 
         .detection-type {
             font-weight: 500;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            font-size: 0.85rem;
+            font-size: 1rem;
         }
 
         .detection-confidence {
             color: #666666;
-            font-size: 0.8rem;
-            margin-bottom: 3px;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
         }
 
         .detection-image-source {
             color: #666666;
-            font-size: 0.75rem;
-            margin-bottom: 3px;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
             font-style: italic;
         }
 
         .detection-coords {
             color: #999999;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             font-family: monospace;
-        }
-
-        .defect-box.false-positive {
-            opacity: 0.4;
-            border-color: #999999;
-        }
-
-        .defect-box.hidden {
-            display: none;
         }
 
         .no-detections {
@@ -1799,11 +1648,7 @@
             </div>
 
             <div class="results-content" id="resultsContent" style="display: none;">
-                <h1 class="results-header">
-                    <button class="home-btn" id="homeBtn">Home</button>
-                    <span class="results-header-text">Inspection Results</span>
-                    <div style="width: 140px;"></div>
-                </h1>
+                <h1 class="results-header">Inspection Results</h1>
                 
                 <div class="results-layout">
                     <!-- Left Side: Image with Detections -->
@@ -1821,20 +1666,8 @@
                     <!-- Right Side: Detections List -->
                     <div class="detections-list-section">
                         <h2 class="detections-header">All Detections</h2>
-                        
-                        <!-- Confidence Filter -->
-                        <div class="confidence-filter-section">
-                            <div class="confidence-filter-label">
-                                <span>Minimum Confidence</span>
-                                <span class="confidence-filter-value" id="confidenceFilterValue">0%</span>
-                            </div>
-                            <input type="range" min="0" max="100" value="0" class="confidence-slider" id="confidenceSlider">
-                            <div class="detection-count" id="detectionCount">Showing all detections</div>
-                        </div>
-                        
                         <div id="detectionsContainer"></div>
-                        <button class="inspect-another-btn" id="inspectAnotherBtn" style="display: none;">Inspect Another Area</button>
-                        <button class="inspect-another-btn" id="inspectNextAreaBtn" style="display: none; margin-top: 15px;">Inspect Next Area</button>
+                        <button class="inspect-another-btn" id="inspectAnotherBtn">Inspect Another Area</button>
                     </div>
                 </div>
             </div>
@@ -1859,8 +1692,6 @@
         let currentImageIndex = 0; // Track which image is currently displayed
         let imageNaturalWidth = 0;
         let imageNaturalHeight = 0;
-        let minConfidence = 0; // Minimum confidence threshold (0-100)
-        let falsePositives = new Set(); // Track false positive predictions by unique ID
 
         // ========================================
         // PAGE NAVIGATION
@@ -2192,78 +2023,31 @@
 
                 // Create defect boxes and extract thumbnails
                 imagePredictions.forEach((prediction, index) => {
-                    // Roboflow API returns coordinates in different formats
-                    // Common formats:
-                    // 1. x, y as center coordinates with width, height
-                    // 2. x_center, y_center as center coordinates with width, height
-                    // 3. x, y as top-left with width, height
-                    // We need to handle all cases and convert to top-left coordinates
-                    
+                    // Get coordinates
                     let x, y, width, height;
                     
-                    // Get width and height first (usually consistent)
-                    width = prediction.width || 0;
-                    height = prediction.height || 0;
-                    
-                    // Handle different coordinate formats
                     if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
-                        // Center-based coordinates: convert to top-left
-                        x = prediction.x_center - width / 2;
-                        y = prediction.y_center - height / 2;
+                        x = prediction.x_center - prediction.width / 2;
+                        y = prediction.y_center - prediction.height / 2;
+                        width = prediction.width;
+                        height = prediction.height;
                     } else if (prediction.x !== undefined && prediction.y !== undefined) {
-                        // Check if x, y are center coordinates (typical Roboflow format)
-                        // Roboflow typically returns x, y as center coordinates
-                        // If width and height exist, assume center-based
-                        if (width > 0 && height > 0) {
-                            // Assume center coordinates (Roboflow standard)
-                            x = prediction.x - width / 2;
-                            y = prediction.y - height / 2;
-                        } else {
-                            // Fallback: assume top-left if no dimensions
-                            x = prediction.x;
-                            y = prediction.y;
-                        }
+                        x = prediction.x;
+                        y = prediction.y;
+                        width = prediction.width || 0;
+                        height = prediction.height || 0;
                     } else {
-                        // Try bbox format
                         const bbox = prediction.bbox || {};
-                        if (bbox.x_center !== undefined && bbox.y_center !== undefined) {
-                            x = bbox.x_center - (bbox.width || width) / 2;
-                            y = bbox.y_center - (bbox.height || height) / 2;
-                            width = bbox.width || width;
-                            height = bbox.height || height;
-                        } else {
-                            x = bbox.x || 0;
-                            y = bbox.y || 0;
-                            width = bbox.width || width;
-                            height = bbox.height || height;
-                        }
+                        x = bbox.x || 0;
+                        y = bbox.y || 0;
+                        width = bbox.width || 0;
+                        height = bbox.height || 0;
                     }
 
-                    // Get confidence value
-                    const confidence = prediction.confidence 
-                        ? Math.round(prediction.confidence * 100) 
-                        : (prediction.confidence_percent || 0);
-                    
-                    // Get prediction ID
-                    const predictionId = getPredictionId(prediction, imageIndex);
-                    const isFalsePositive = falsePositives.has(predictionId);
-                    
                     // Create box
                     const box = document.createElement('div');
                     box.className = 'defect-box';
                     box.dataset.predictionIndex = index;
-                    box.dataset.predictionId = predictionId;
-                    box.dataset.confidence = confidence;
-                    
-                    // Apply false positive styling if needed
-                    if (isFalsePositive) {
-                        box.classList.add('false-positive');
-                    }
-                    
-                    // Hide if below confidence threshold or false positive
-                    if (confidence < minConfidence || isFalsePositive) {
-                        box.classList.add('hidden');
-                    }
                     
                     const scaledX = x * scaleX;
                     const scaledY = y * scaleY;
@@ -2279,15 +2063,15 @@
                     if (prediction.class) {
                         const label = document.createElement('div');
                         label.className = 'defect-label';
+                        const confidence = prediction.confidence 
+                            ? Math.round(prediction.confidence * 100) 
+                            : (prediction.confidence_percent || 0);
                         label.textContent = `${prediction.class} (${confidence}%)`;
                         box.appendChild(label);
                     }
 
                     resultsImageWrapper.appendChild(box);
                 });
-                
-                // Update filter display after boxes are created
-                updateFilterDisplay();
             };
             
             // Display detections list with thumbnails
@@ -2301,30 +2085,26 @@
                         <div style="margin-top: 10px; color: #666; font-size: 0.85rem;">Image: ${imageData.file.name}</div>
                     </div>
                 `;
-                document.getElementById('detectionCount').textContent = 'Showing 0 of 0 detections';
             } else {
                 // Create thumbnails for each defect
                 imagePredictions.forEach((prediction, index) => {
-                    createDefectThumbnail(prediction, imageData, index, imagePredictions.length, imageIndex);
+                    createDefectThumbnail(prediction, imageData, index, imagePredictions.length);
                 });
 
                 // Add summary info
                 const summary = document.createElement('div');
-                summary.className = 'detection-item summary-item';
+                summary.className = 'detection-item';
                 summary.style.borderTop = '2px solid #000000';
-                summary.style.marginTop = '15px';
-                summary.style.paddingTop = '15px';
+                summary.style.marginTop = '20px';
+                summary.style.paddingTop = '20px';
                 summary.innerHTML = `
-                    <div style="color: #666; font-weight: 500; font-size: 0.85rem;">Area Inspected: ${formatAreaName(area)}</div>
-                    <div style="color: #666; font-size: 0.75rem; margin-top: 3px;">Image: ${imageData.file.name}</div>
-                    <div style="color: #666; font-size: 0.75rem; margin-top: 3px;">Defects in this image: ${imagePredictions.length}</div>
-                    <div style="color: #666; font-size: 0.75rem; margin-top: 3px;">Total images: ${images.length}</div>
-                    <div style="color: #666; font-size: 0.75rem; margin-top: 3px;">Total defects (all images): ${allPredictions.length}</div>
+                    <div style="color: #666; font-weight: 500;">Area Inspected: ${formatAreaName(area)}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Image: ${imageData.file.name}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Defects in this image: ${imagePredictions.length}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Total images: ${images.length}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Total defects (all images): ${allPredictions.length}</div>
                 `;
                 detectionsContainer.appendChild(summary);
-                
-                // Update filter and false positive states
-                updateFilterDisplay();
             }
 
             // Show/hide navigation based on number of images
@@ -2338,64 +2118,33 @@
                 imageNavigation.style.display = 'none';
             }
 
-            // Show "Inspect Next Area" button if on last image
-            const inspectNextAreaBtn = document.getElementById('inspectNextAreaBtn');
-            const inspectAnotherBtn = document.getElementById('inspectAnotherBtn');
-            if (imageIndex === images.length - 1) {
-                inspectNextAreaBtn.style.display = 'block';
-                inspectAnotherBtn.style.display = 'none';
-            } else {
-                inspectNextAreaBtn.style.display = 'none';
-                inspectAnotherBtn.style.display = 'block';
-            }
-
             // Show results content
             document.getElementById('resultsContent').style.display = 'block';
         }
 
-        function createDefectThumbnail(prediction, imageData, index, totalDefects, imageIndex) {
+        function createDefectThumbnail(prediction, imageData, index, totalDefects) {
             const detectionsContainer = document.getElementById('detectionsContainer');
             
-            // Extract defect coordinates (same logic as main image boxes)
+            // Extract defect coordinates
             let x, y, width, height;
             
-            // Get width and height first
-            width = prediction.width || 0;
-            height = prediction.height || 0;
-            
-            // Handle different coordinate formats
             if (prediction.x_center !== undefined && prediction.y_center !== undefined) {
-                x = prediction.x_center - width / 2;
-                y = prediction.y_center - height / 2;
+                x = prediction.x_center - prediction.width / 2;
+                y = prediction.y_center - prediction.height / 2;
+                width = prediction.width;
+                height = prediction.height;
             } else if (prediction.x !== undefined && prediction.y !== undefined) {
-                if (width > 0 && height > 0) {
-                    // Assume center coordinates (Roboflow standard)
-                    x = prediction.x - width / 2;
-                    y = prediction.y - height / 2;
-                } else {
-                    x = prediction.x;
-                    y = prediction.y;
-                }
+                x = prediction.x;
+                y = prediction.y;
+                width = prediction.width || 0;
+                height = prediction.height || 0;
             } else {
                 const bbox = prediction.bbox || {};
-                if (bbox.x_center !== undefined && bbox.y_center !== undefined) {
-                    x = bbox.x_center - (bbox.width || width) / 2;
-                    y = bbox.y_center - (bbox.height || height) / 2;
-                    width = bbox.width || width;
-                    height = bbox.height || height;
-                } else {
-                    x = bbox.x || 0;
-                    y = bbox.y || 0;
-                    width = bbox.width || width;
-                    height = bbox.height || height;
-                }
+                x = bbox.x || 0;
+                y = bbox.y || 0;
+                width = bbox.width || 0;
+                height = bbox.height || 0;
             }
-
-            // Create unique prediction ID
-            const predictionId = getPredictionId(prediction, imageIndex);
-            
-            // Check if this is already marked as false positive
-            const isFalsePositive = falsePositives.has(predictionId);
 
             // Create canvas to crop defect
             const img = new Image();
@@ -2418,15 +2167,9 @@
                 
                 // Create detection item
                 const detectionItem = document.createElement('div');
-                detectionItem.className = 'detection-item' + (isFalsePositive ? ' false-positive' : '');
+                detectionItem.className = 'detection-item';
                 detectionItem.dataset.predictionIndex = index;
-                detectionItem.dataset.predictionId = predictionId;
-                detectionItem.onclick = (e) => {
-                    // Don't highlight if clicking on checkbox
-                    if (!e.target.classList.contains('false-positive-checkbox')) {
-                        highlightDefect(index);
-                    }
-                };
+                detectionItem.onclick = () => highlightDefect(index);
                 
                 const confidence = prediction.confidence 
                     ? Math.round(prediction.confidence * 100) 
@@ -2439,43 +2182,17 @@
                     coordsText = `Position: (${Math.round(prediction.x)}, ${Math.round(prediction.y)})`;
                 }
                 
-                // Create X button in top-right corner
-                const xButton = document.createElement('button');
-                xButton.className = 'false-positive-x-button';
-                xButton.innerHTML = '×';
-                xButton.title = isFalsePositive ? 'Restore detection' : 'Mark as False Positive';
-                xButton.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleFalsePositive(predictionId, imageIndex, index);
-                });
-                
-                // Create detection header
-                const header = document.createElement('div');
-                header.className = 'detection-header';
-                
-                const thumbnailImg = document.createElement('img');
-                thumbnailImg.src = thumbnailDataURL;
-                thumbnailImg.alt = 'Defect thumbnail';
-                thumbnailImg.className = 'defect-thumbnail';
-                thumbnailImg.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    highlightDefect(index);
-                });
-                
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'detection-info';
-                infoDiv.innerHTML = `
-                    <div class="detection-type">${prediction.class || 'Defect ' + (index + 1)}</div>
-                    <div class="detection-confidence">Confidence: ${confidence}%</div>
-                    <div class="detection-image-source">From: ${imageData.file.name}</div>
-                    ${coordsText ? `<div class="detection-coords">${coordsText}</div>` : ''}
+                detectionItem.innerHTML = `
+                    <div class="detection-header">
+                        <img src="${thumbnailDataURL}" alt="Defect thumbnail" class="defect-thumbnail" onclick="event.stopPropagation(); highlightDefect(${index})">
+                        <div class="detection-info">
+                            <div class="detection-type">${prediction.class || 'Defect ' + (index + 1)}</div>
+                            <div class="detection-confidence">Confidence: ${confidence}%</div>
+                            <div class="detection-image-source">From: ${imageData.file.name}</div>
+                            ${coordsText ? `<div class="detection-coords">${coordsText}</div>` : ''}
+                        </div>
+                    </div>
                 `;
-                
-                header.appendChild(thumbnailImg);
-                header.appendChild(infoDiv);
-                
-                detectionItem.appendChild(header);
-                detectionItem.appendChild(xButton);
                 
                 detectionsContainer.appendChild(detectionItem);
             };
@@ -2526,6 +2243,7 @@
         }
 
         // ========================================
+<<<<<<< HEAD
         // CONFIDENCE FILTER
         // ========================================
         document.getElementById('confidenceSlider').addEventListener('input', function(e) {
@@ -2676,6 +2394,11 @@
         });
 
         function resetToNewInspection() {
+=======
+        // PAGE 2: INSPECT ANOTHER AREA BUTTON
+        // ========================================
+        document.getElementById('inspectAnotherBtn').addEventListener('click', () => {
+>>>>>>> parent of 1a83dc1 (Added confidence filter, bounding box fix, and navigation buttons)
             // Reset state
             selectedArea = "";
             selectedImages = [];
@@ -2683,8 +2406,6 @@
             currentPredictions = [];
             allImageResults = [];
             currentImageIndex = 0;
-            minConfidence = 0;
-            falsePositives.clear();
             
             // Reset UI - clear selections on Page 1
             document.querySelectorAll('#page1 .area-btn').forEach(btn => btn.classList.remove('selected'));
@@ -2692,6 +2413,7 @@
             fileInput.value = "";
             analyzeBtn.disabled = true;
             
+<<<<<<< HEAD
             // Go back to page 0 (dashboard homepage)
             showPage(0);
             // Reset Start Inspection button on Page 1
@@ -2814,6 +2536,11 @@
                 alert('Failed to save inspection results. Please try again.');
             }
         }
+=======
+            // Go back to page 1 (area selection)
+            showPage(1);
+        });
+>>>>>>> parent of 1a83dc1 (Added confidence filter, bounding box fix, and navigation buttons)
     </script>
     </div> <!-- End main-content-wrapper -->
 </body>
